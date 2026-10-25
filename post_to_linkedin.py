@@ -120,25 +120,35 @@ def pick_topic(topics):
 
 # ==================== AI text generation ====================
 
-def gemini_text(prompt):
+def gemini_text(prompt, retries=3, backoff=15):
     url = f"{GEMINI_BASE}/{GEMINI_TEXT_MODEL}:generateContent"
-    resp = requests.post(
-        url,
-        headers={"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"},
-        json={"contents": [{"parts": [{"text": prompt}]}],
-              "generationConfig": {"temperature": 1.05}},
-        timeout=60,
-    )
-    resp.raise_for_status()
-    return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.post(
+                url,
+                headers={"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"},
+                json={"contents": [{"parts": [{"text": prompt}]}],
+                      "generationConfig": {"temperature": 1.05}},
+                timeout=60,
+            )
+            resp.raise_for_status()
+            return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+        except requests.exceptions.HTTPError as e:
+            status = e.response.status_code if e.response is not None else None
+            if status in (429, 500, 502, 503, 504) and attempt < retries:
+                wait = backoff * attempt
+                print(f"Gemini error {status} on attempt {attempt}/{retries} — retrying in {wait}s", file=sys.stderr)
+                time.sleep(wait)
+            else:
+                raise
 
 
 def build_prompt(cfg, topic, leadership=False):
     shape = random.choice(LEAD_FORMATS if leadership else FORMATS)
     niche = (cfg.get("niche") or "").strip()
     voice = ((cfg.get("leadership_voice") if leadership else cfg.get("voice")) or "").strip()
-    hook_style = (cfg.get("hook_style") or "").strip()  # NEW: pulls hook_style from config.yaml
-    max_tags = int(cfg.get("max_hashtags", 3))
+    hook_style = (cfg.get("hook_style") or "").strip()  # pulls hook_style from config.yaml
+    max_tags = int(cfg.get("max_hashtags", 2))
     length = cfg.get("target_length", "90 to 160 words")
     samples = [s.strip() for s in (cfg.get("style_samples") or []) if s and s.strip()]
 
@@ -196,7 +206,7 @@ def build_prompt(cfg, topic, leadership=False):
             + common_rules
         )
     else:
-        # NEW: injects hook_style from config.yaml if present, falls back to default rule
+        # injects hook_style from config.yaml if present, falls back to default rule
         hook_rule = (
             f"- Hook rule: {hook_style}\n"
             if hook_style else
