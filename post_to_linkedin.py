@@ -205,6 +205,8 @@ def build_prompt(cfg, topic, leadership=False):
         "- CUT ANY LINE THAT ONLY RESTATES AN EARLIER POINT. Every sentence must add new "
         "information, a new example, or a new angle. Do not summarize your own post or "
         "repeat the conclusion in different words. Make each line earn its place.\n"
+        "- DELIVER ON THE HOOK. Whatever specific thing the first line names or promises, "
+        "the body must actually address it. Do not open a loop you never close.\n"
         "- Short. Easy to skim on a phone. Vary sentence length.\n"
         "- Simple everyday English. Write like a real person, not a brand.\n"
         "- No em dashes, no double hyphens. Normal punctuation only.\n"
@@ -227,7 +229,8 @@ def build_prompt(cfg, topic, leadership=False):
             "know', no 'In today's world'.\n"
             "- Keep any example general (a lead, a teammate, a junior), not a made-up "
             "personal story about the author.\n"
-            "- End with a warm, open question or a quiet takeaway.\n"
+            "- End with a warm but SPECIFIC question (the one small thing they would point "
+            "to), or a quiet takeaway. Avoid broad 'how do you...' questions.\n"
             + common_rules
         )
     else:
@@ -243,7 +246,9 @@ def build_prompt(cfg, topic, leadership=False):
             + hook_rule +
             "- Include one concrete, specific detail or example, framed generally "
             "(a company, a team, a BI developer), not as a personal anecdote.\n"
-            "- End with a light question or small takeaway. No hard sales CTA.\n"
+            "- End with a SPECIFIC question that asks for a concrete choice, a ranking, or "
+            "the one thing they would pick (for example 'which step do you always skip?'). "
+            "Never a broad 'how do you do X' that invites vague answers. No hard sales CTA.\n"
             "- Confident and informative, clearly interested in data, and encouraging.\n"
             + common_rules
         )
