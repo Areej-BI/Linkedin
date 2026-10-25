@@ -1,0 +1,73 @@
+name: LinkedIn Auto Post
+
+on:
+  schedule:
+    # ─────────────────────────────────────────────────────────────
+    #  Times are UTC. Pakistan (PKT) = UTC+5, subtract 5 hours.
+    #  day-of-week: 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
+    #  Default = Tuesday & Thursday at 10:00 AM PKT (05:00 UTC).
+    # ─────────────────────────────────────────────────────────────
+    - cron: "0 5 * * 2"   # Tue 10:00 PKT
+    - cron: "0 5 * * 4"   # Thu 10:00 PKT
+  workflow_dispatch:       # run it by hand from the Actions tab
+
+jobs:
+  # STEP 1 — AI picks a topic and writes the draft (does NOT post)
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Write the draft
+        run: python post_to_linkedin.py generate
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+
+      # Save the history file back to the repo so it remembers what was posted
+      - name: Save post history
+        run: |
+          git config user.name "linkedin-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add history.txt
+          git diff --cached --quiet || git commit -m "update post history"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Hand the draft to the publish step
+      - uses: actions/upload-artifact@v4
+        with:
+          name: draft
+          path: draft/
+
+  # STEP 2 — publish (pauses and waits for YOUR approval)
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    environment: production   # <── remove the reviewer later to skip approval
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: draft
+          path: draft/
+
+      - name: Publish to LinkedIn
+        run: python post_to_linkedin.py publish
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}

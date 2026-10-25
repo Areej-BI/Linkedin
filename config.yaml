@@ -1,0 +1,48 @@
+# ============================================================
+#   YOUR CONTROL PANEL
+#   Edit this directly on GitHub: click the file → pencil icon.
+#   Topics live in topics.txt (also editable on GitHub).
+# ============================================================
+
+# ---- YOUR NICHE -------------------------------------------
+niche: >
+  Senior Power BI developer, Microsoft certified in BI. Hands-on
+  experience with real client projects. Also work with other BI tools,
+  know basic Python, ML, and automation, and strong at data storytelling.
+  I write for BI developers, data analysts, and business stakeholders
+  who use or care about dashboards and data-driven decisions.
+
+# ---- YOUR VOICE -------------------------------------------
+voice: >
+  Short, punchy, slightly opinionated but never arrogant. I sound like a
+  developer who has built real things for real clients and has opinions
+  because of that experience, not because I read a blog. Friendly and
+  direct. When I talk about leadership or management, I keep it soft,
+  smart, and polite. No chest-thumping. No motivational-speaker energy.
+  I earn credibility through specific examples, not big claims.
+  Simple everyday English. Think senior colleague who is genuinely
+  helpful, not someone performing thought leadership.
+
+# ---- LEADERSHIP VOICE (used only for [lead] topics) -------
+# Softer and warmer than your data voice. Used automatically whenever
+# the chosen topic line starts with [lead].
+leadership_voice: >
+  Warm, humble, and polite. Smart but gentle. I share leadership thoughts
+  as personal reflections, not advice I am lecturing people with. Calm and
+  kind, never preachy, never motivational-speaker energy. The tone of someone
+  thoughtful who is still learning, not someone who has it all figured out.
+
+# ---- YOUR OWN WRITING SAMPLES (optional, very powerful) ----
+# Paste 1-2 of your real LinkedIn posts so the AI copies your rhythm.
+# To skip, leave it as:  style_samples: []
+style_samples: []
+
+# ---- POST RULES -------------------------------------------
+max_hashtags: 2
+target_length: "90 to 160 words"
+
+# ---- IMAGES -----------------------------------------------
+image:
+  enabled: true
+  probability: 0.4     # ~40% of posts get a photo
+  source: pexels       # "pexels" = real stock photos, "ai" = Gemini-generated
