@@ -2,3 +2,4 @@ Power BI Copilot is genuinely useful for a first pass. Where it helps most, and 
 Turning a raw metric into a decision is a craft, not a chart choice
 Why fewer visuals on a page often makes the remaining ones land harder
 Fabric turned Power BI into part of a bigger data platform. What that opens up for data people
+Visual calculations can replace some heavy DAX. Where they help and where they do not
