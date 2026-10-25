@@ -25,47 +25,47 @@ voice: >
   No filler phrases. No padding where it adds nothing. Every sentence
   earns its place. But where a short transition or cushion helps the
   reader follow the thought, use it — just keep it tight.
+  When choosing hashtags, pick specific BI or data tags like
+  #PowerBI #DataStorytelling #BusinessIntelligence, not broad generic
+  ones like #AI #Tech #Data.
 
 # ---- HOOK RULES (applied to every post's opening line) ----
-# The first line must stop the scroll. No warm-ups, no context-setting,
-# no "Here's something I've noticed..." openers. Drop the reader
-# straight into the tension, the mistake, the surprising fact,
-# or the counterintuitive truth.
-#
-# Strong hook patterns to rotate through:
-#   - The uncomfortable truth:  "Most dashboards answer the wrong question."
-#   - The specific mistake:     "I spent 3 days building a report nobody opened."
-#   - The sharp contrast:       "Clients ask for reports. They actually need decisions."
-#   - The blunt number/fact:    "One question saves more time than any DAX measure."
-#   - The challenge/provocation:"Your filters are lying to your stakeholders."
-#
-# Avoid these weak openers:
-#   - "In today's data-driven world..."
-#   - "I've been thinking about..."
-#   - "Here's something interesting..."
-#   - "As a BI developer, I often..."
-#   - Any opener that could apply to any post by anyone in any field.
-#
-# The hook should be one sentence, max two. No emoji in the hook.
 hook_style: >
   Lead with tension, a specific mistake, a blunt truth, or a
   counterintuitive contrast. Make it feel like something real happened
   or something important is at stake. Cut any opener that sounds like
   a blog intro. The first line is the whole reason someone keeps reading.
+  Strong patterns: a blunt fact, a sharp contrast, a common mistake named
+  directly. Avoid: "In today's world", "I've been thinking about",
+  "Here's something interesting", "As a BI developer, I often".
 
 # ---- LEADERSHIP VOICE (used only for [lead] topics) -------
-# Softer and warmer than your data voice. Used automatically whenever
-# the chosen topic line starts with [lead].
 leadership_voice: >
   Warm, humble, and polite. Smart but gentle. I share leadership thoughts
   as personal reflections, not advice I am lecturing people with. Calm and
   kind, never preachy, never motivational-speaker energy. The tone of someone
   thoughtful who is still learning, not someone who has it all figured out.
 
-# ---- YOUR OWN WRITING SAMPLES (optional, very powerful) ----
-# Paste 1-2 of your real LinkedIn posts so the AI copies your rhythm.
-# To skip, leave it as:  style_samples: []
-style_samples: []
+# ---- YOUR OWN WRITING SAMPLES -----------------------------
+style_samples:
+  - |
+    AI will write a complex DAX measure or Python script in three seconds.
+    It will also confidently reference a column that was deleted six months ago.
+
+    That's why the best data teams treat AI like a fast new hire who hasn't
+    learned the codebase yet.
+
+    You don't hand a new hire production access on day one. You give clear
+    instructions, let them generate the starter code, then check the logic.
+    Did it handle blank values correctly? Does this total match the source?
+
+    Value is moving away from memorizing syntax toward validation, modeling,
+    and business context. Less time typing boilerplate, more time refining
+    the story.
+
+    That makes the role more interesting, not less.
+
+    How are you reviewing AI output in your workflow?
 
 # ---- POST RULES -------------------------------------------
 max_hashtags: 3
@@ -74,5 +74,5 @@ target_length: "90 to 160 words"
 # ---- IMAGES -----------------------------------------------
 image:
   enabled: true
-  probability: 0.4     # ~40% of posts get a photo
-  source: pexels       # "pexels" = real stock photos, "ai" = Gemini-generated
+  probability: 0.4
+  source: pexels
