@@ -68,7 +68,7 @@ leadership_voice: >
 style_samples: []
 
 # ---- POST RULES -------------------------------------------
-max_hashtags: 2
+max_hashtags: 3
 target_length: "90 to 160 words"
 
 # ---- IMAGES -----------------------------------------------
