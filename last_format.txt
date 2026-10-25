@@ -1,2 +1,3 @@
 a clear, specific insight explained simply, with a general example (a company, a team, a BI developer)
 a hopeful take on how a shift in the field is creating opportunity, grounded in specifics
+an observation about where the real value in data work is moving, stated with optimism
