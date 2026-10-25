@@ -3,3 +3,4 @@ As AI takes over routine report building, the most valuable BI skill is becoming
 Fabric turned Power BI into part of a larger data platform, which opens real new ground for BI people willing to grow with it
 [lead] Good leadership often looks like quietly removing obstacles, not taking the credit
 One thoughtful question asked before building a report can save a team weeks. The kind of question that works
+Data storytelling is the one part of analytics AI cannot fake yet, and it is becoming the skill that sets people apart
