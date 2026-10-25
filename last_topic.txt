@@ -5,3 +5,4 @@ Fabric turned Power BI into part of a larger data platform, which opens real new
 One thoughtful question asked before building a report can save a team weeks. The kind of question that works
 Data storytelling is the one part of analytics AI cannot fake yet, and it is becoming the skill that sets people apart
 Clear names for measures and columns are a small habit that quietly makes a whole model easier for everyone to use
+The future of BI looks less like clicking through menus and more like shaping data and guiding decisions, and that is an exciting shift
