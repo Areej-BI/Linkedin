@@ -28,6 +28,13 @@ voice: >
   When choosing hashtags, pick specific BI or data tags like
   #PowerBI #DataStorytelling #BusinessIntelligence, not broad generic
   ones like #AI #Tech #Data.
+  Never frame a problem as the reader's personal failure. If something
+  is going wrong, frame it as a common pattern the industry faces,
+  not something the individual did wrong. The reader should feel
+  understood, not called out.
+  Never demean or talk down to any role or experience level. If using
+  a workplace analogy, keep it about process and context, never about
+  someone's capability or confidence.
 
 # ---- HOOK RULES (applied to every post's opening line) ----
 hook_style: >
@@ -35,9 +42,26 @@ hook_style: >
   counterintuitive contrast. Make it feel like something real happened
   or something important is at stake. Cut any opener that sounds like
   a blog intro. The first line is the whole reason someone keeps reading.
-  Strong patterns: a blunt fact, a sharp contrast, a common mistake named
-  directly. Avoid: "In today's world", "I've been thinking about",
-  "Here's something interesting", "As a BI developer, I often".
+  Strong patterns to rotate through:
+  - A process detail that ends in a quiet failure. Example: "The dashboard
+    passed UAT, got signed off, and quietly stopped being opened. Nobody said why."
+  - A blunt fact that flips conventional wisdom. Example: "A well-built
+    dashboard that nobody opens is still a failed dashboard."
+  - A sharp contrast between what people do and what actually works.
+  - A common industry pattern named directly, framed as shared experience
+    not personal failure. Example: "Most dashboards get built carefully
+    and opened rarely. The gap is almost never the data."
+  - A two-sentence open loop: state a problem, then subvert the obvious
+    explanation so the reader has to keep reading to find out why.
+  Avoid these weak openers:
+  - "In today's world..." or "In today's data-driven world..."
+  - "I've been thinking about..."
+  - "Here's something interesting..."
+  - "As a BI developer, I often..."
+  - "Did you know..."
+  - "Ever wondered..."
+  - Any opener that could belong to any post by anyone in any field.
+  The hook should be one or two sentences max. No emoji in the hook.
 
 # ---- LEADERSHIP VOICE (used only for [lead] topics) -------
 leadership_voice: >
@@ -66,6 +90,33 @@ style_samples:
     That makes the role more interesting, not less.
 
     How are you reviewing AI output in your workflow?
+
+  - |
+    The dashboard passed UAT, got signed off, and quietly stopped being opened.
+    Nobody said why.
+
+    This usually isn't a data problem. It's a design problem.
+
+    There are two kinds of reports, and they need completely different thinking.
+
+    An operational dashboard is built for detail. Tables, slicers, trends on
+    one screen so a team can spot daily anomalies fast.
+
+    An executive dashboard is built for clarity. Two key numbers, one trend,
+    nothing else competing for attention.
+
+    Most abandoned dashboards were built in operational mode for an audience
+    that needed executive mode.
+
+    Power BI's Card visual helps close that gap — reference context tucked
+    into one element instead of three extra charts on the canvas.
+
+    Removing visuals rarely hides information. It gives the remaining data
+    room to actually drive a decision.
+
+    Which type are you building most often right now?
+
+    #PowerBI #DataVisualization #BusinessIntelligence
 
 # ---- POST RULES -------------------------------------------
 max_hashtags: 3
