@@ -22,6 +22,36 @@ voice: >
   I earn credibility through specific examples, not big claims.
   Simple everyday English. Think senior colleague who is genuinely
   helpful, not someone performing thought leadership.
+  No filler phrases. No padding where it adds nothing. Every sentence
+  earns its place. But where a short transition or cushion helps the
+  reader follow the thought, use it — just keep it tight.
+
+# ---- HOOK RULES (applied to every post's opening line) ----
+# The first line must stop the scroll. No warm-ups, no context-setting,
+# no "Here's something I've noticed..." openers. Drop the reader
+# straight into the tension, the mistake, the surprising fact,
+# or the counterintuitive truth.
+#
+# Strong hook patterns to rotate through:
+#   - The uncomfortable truth:  "Most dashboards answer the wrong question."
+#   - The specific mistake:     "I spent 3 days building a report nobody opened."
+#   - The sharp contrast:       "Clients ask for reports. They actually need decisions."
+#   - The blunt number/fact:    "One question saves more time than any DAX measure."
+#   - The challenge/provocation:"Your filters are lying to your stakeholders."
+#
+# Avoid these weak openers:
+#   - "In today's data-driven world..."
+#   - "I've been thinking about..."
+#   - "Here's something interesting..."
+#   - "As a BI developer, I often..."
+#   - Any opener that could apply to any post by anyone in any field.
+#
+# The hook should be one sentence, max two. No emoji in the hook.
+hook_style: >
+  Lead with tension, a specific mistake, a blunt truth, or a
+  counterintuitive contrast. Make it feel like something real happened
+  or something important is at stake. Cut any opener that sounds like
+  a blog intro. The first line is the whole reason someone keeps reading.
 
 # ---- LEADERSHIP VOICE (used only for [lead] topics) -------
 # Softer and warmer than your data voice. Used automatically whenever
