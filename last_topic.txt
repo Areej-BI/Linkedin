@@ -5,3 +5,4 @@ Fabric turned Power BI into part of a bigger data platform. What that opens up f
 Visual calculations can replace some heavy DAX. Where they help and where they do not
 Stakeholders rarely want a 14 tab report. They want one number and the story behind it
 AI can write DAX in seconds now. That frees a developer to focus on the model and the story
+Treating AI like a fast junior that still needs checking is the mindset working best in data right now
