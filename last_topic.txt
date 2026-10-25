@@ -1,4 +1,3 @@
-As AI takes over routine report building, the most valuable BI skill is becoming judgment: knowing which number actually matters
 Fabric turned Power BI into part of a larger data platform, which opens real new ground for BI people willing to grow with it
 [lead] Good leadership often looks like quietly removing obstacles, not taking the credit
 One thoughtful question asked before building a report can save a team weeks. The kind of question that works
@@ -8,3 +7,4 @@ The future of BI looks less like clicking through menus and more like shaping da
 Treating AI like a fast, eager junior that still needs checking is the mindset working best in data right now
 Less is usually more in a report. Removing a few visuals often makes the remaining ones land harder
 Power BI Copilot is genuinely useful for a first pass. Where it helps most, and where a person still adds the real value
+[lead] How a lead responds to a junior's mistake often teaches more than the fix itself
