@@ -7,8 +7,8 @@ on:
     #  day-of-week: 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
     #  Default = Tuesday & Thursday at 10:00 AM PKT (05:00 UTC).
     # ─────────────────────────────────────────────────────────────
-    - cron: "0 5 * * 2"   # Tue 10:00 PKT
-    - cron: "0 5 * * 4"   # Thu 10:00 PKT
+    - cron: "30 10 * * 3"   # Wed ...
+    - cron: "30 10 * * 5"   # Fri ...
   workflow_dispatch:       # run it by hand from the Actions tab
 
 # Give the workflow permission to write back to the repo
