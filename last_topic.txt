@@ -1,3 +1,4 @@
 [lead] Feedback given with kindness tends to land better and last longer. A gentle art worth practicing
 As AI takes over routine report building, the most valuable BI skill is becoming judgment: knowing which number actually matters
 Fabric turned Power BI into part of a larger data platform, which opens real new ground for BI people willing to grow with it
+[lead] Good leadership often looks like quietly removing obstacles, not taking the credit
