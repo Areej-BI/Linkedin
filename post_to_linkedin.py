@@ -8,8 +8,8 @@ Two modes:
 
 Topics come from topics.txt (one per line, editable on GitHub).
 Niche/voice/image settings come from config.yaml.
-Smart picking: avoids the last topic, varies post shape, asks the AI to
-weave in something currently trending when relevant.
+Smart picking: avoids the last 3 topics, varies post shape, and sizes each
+post's length to its type. Asks the AI to weave in trending angles when relevant.
 """
 
 import base64
@@ -47,24 +47,31 @@ META_FILE = os.path.join(DRAFT_DIR, "meta.json")
 # Topics starting with this tag are leadership posts -> softer, polite tone.
 LEAD_TAG = "[lead]"
 
-# Post shapes for DATA posts (rotated so the feed never feels templated).
-# All are observational / insight-based, never fabricated personal stories.
+# Each format is (shape, length). Length is matched to the post type: teaching and
+# comparison posts run longer because they earn dwell time; hot takes stay short.
 FORMATS = [
-    "a clear, specific insight explained simply, with a general example (a company, a team, a BI developer)",
-    "a hopeful take on how a shift in the field is creating opportunity, grounded in specifics",
-    "a myth-busting post: name a common belief, then calmly explain why the reality is more encouraging",
-    "a practical, useful tip the reader can apply, explained through a general example not a personal anecdote",
-    "an observation about where the real value in data work is moving, stated with optimism",
-    "a simple comparison of two approaches and when each one helps, no drama",
-    "a short, confident explanation of why one habit or idea quietly matters more than people think",
+    ("a clear, specific insight explained simply, with a general example (a company, a team, a BI developer)",
+     "120 to 200 words"),
+    ("a hopeful take on how a shift in the field is creating opportunity, grounded in specifics",
+     "90 to 150 words"),
+    ("a myth-busting post: name a common belief, then calmly explain why the reality is more encouraging",
+     "60 to 110 words"),
+    ("a practical, useful tip the reader can apply, explained through a general example not a personal anecdote",
+     "130 to 210 words"),
+    ("an observation about where the real value in data work is moving, stated with optimism",
+     "80 to 140 words"),
+    ("a simple comparison of two approaches and when each one helps, no drama",
+     "140 to 230 words"),
+    ("a short, confident explanation of why one habit or idea quietly matters more than people think",
+     "70 to 120 words"),
 ]
 
-# Softer shapes for LEADERSHIP posts: gentle observations, never preaching.
+# Leadership posts: reflective but tight. (shape, length)
 LEAD_FORMATS = [
-    "a gentle observation about what effective, kind leadership tends to look like",
-    "a small, specific observation about working well with a team, noticed not preached",
-    "a calm, humble reflection on a leadership idea, kept general and warm",
-    "a quiet observation about a habit good leaders tend to share",
+    ("a gentle observation about what effective, kind leadership tends to look like", "80 to 130 words"),
+    ("a small, specific observation about working well with a team, noticed not preached", "80 to 130 words"),
+    ("a calm, humble reflection on a leadership idea, kept general and warm", "80 to 130 words"),
+    ("a quiet observation about a habit good leaders tend to share", "80 to 130 words"),
 ]
 
 
@@ -111,7 +118,7 @@ def pick_topic(topics):
     """Pick a random topic, avoiding the 3 most recently used ones."""
     recent = set(get_last_topics(3))
     available = [t for t in topics if t not in recent]
-    if not available:          # all topics recently used — reset and pick freely
+    if not available:          # all topics recently used -> reset and pick freely
         available = topics
     chosen = random.choice(available)
     save_last_topic(chosen)
@@ -144,18 +151,17 @@ def gemini_text(prompt, retries=3, backoff=15):
 
 
 def build_prompt(cfg, topic, leadership=False):
-    shape = random.choice(LEAD_FORMATS if leadership else FORMATS)
+    shape, length = random.choice(LEAD_FORMATS if leadership else FORMATS)
     niche = (cfg.get("niche") or "").strip()
     voice = ((cfg.get("leadership_voice") if leadership else cfg.get("voice")) or "").strip()
-    hook_style = (cfg.get("hook_style") or "").strip()  # pulls hook_style from config.yaml
+    hook_style = (cfg.get("hook_style") or "").strip()  # optional override from config.yaml
     max_tags = int(cfg.get("max_hashtags", 2))
-    length = cfg.get("target_length", "90 to 160 words")
     samples = [s.strip() for s in (cfg.get("style_samples") or []) if s and s.strip()]
 
     tag_rule = (f"at most {max_tags} relevant hashtag(s), or none"
                 if max_tags else "no hashtags at all")
 
-    p = ["Write ONE LinkedIn post for my personal profile.\n"]
+    p = ["Write ONE short, scroll-stopping LinkedIn post for my personal profile.\n"]
     if niche:
         p.append(f"About me and my audience:\n{niche}\n")
     p.append(f"Topic for today: {topic}\n")
@@ -180,14 +186,28 @@ def build_prompt(cfg, topic, leadership=False):
         "a scenario, keep it general: a company, a team, a BI developer, a stakeholder.\n"
         "- BE SPECIFIC AND SUBSTANTIVE. Say something concrete. No vague, generic filler "
         "that could apply to any field or any tool.\n"
-        "- Short. Easy to skim on a phone. Vary sentence length.\n"
         "- Simple everyday English. Write like a real person, not a brand.\n"
         "- No em dashes, no double hyphens. Normal punctuation only.\n"
         "- No buzzwords: leverage, synergy, game-changer, unlock, thrilled to, elevate, "
         "dive in, in conclusion, the truth is. No 'It's not just X, it's Y' pattern.\n"
         "- No emoji spam (one max, only if natural).\n"
         f"- Hashtags: {tag_rule}.\n"
-        f"- {length}. Plain text only. No title, no markdown.\n"
+        f"- LENGTH (strict): {length}. Match this length to the shape above. If it is a longer "
+        "band, earn the length with real substance, never padding. If shorter, keep it tight.\n"
+        "- FORMAT for skimming: hook on its own line, then a blank line, then short lines, "
+        "each one idea. White space matters. Plain text only, no markdown, no title.\n"
+    )
+
+    # Strong default hook (used unless you set hook_style in config.yaml)
+    strong_hook = (
+        "- THE FIRST LINE IS EVERYTHING. On LinkedIn only the first 1 to 2 lines show in the "
+        "feed before a 'see more' link, so the opening line ALONE must make someone stop "
+        "scrolling and click to read the rest. Keep it under about 12 words.\n"
+        "- Do not give away the full point in the first line. Leave a small curiosity gap so "
+        "they expand the post. No 'In today's world', no 'Ever wondered', no 'Did you know', "
+        "no warm-up.\n"
+        "- Make the hook a sharp claim, a surprising point, a myth worth breaking, or a crisp "
+        "question.\n"
     )
 
     if leadership:
@@ -198,21 +218,18 @@ def build_prompt(cfg, topic, leadership=False):
             "- Frame it as a gentle OBSERVATION, never as advice shouted at people or "
             "commands. Avoid 'you should' and 'you need to'. Prefer 'the best leaders "
             "tend to', 'it often helps when', 'something worth noticing'.\n"
-            "- Open with a gentle, specific hook, not a bold provocation. No 'Did you "
-            "know', no 'In today's world'.\n"
+            "- THE FIRST LINE STILL MATTERS: only the first 1 to 2 lines show before "
+            "'see more', so make the opening a quiet but intriguing observation that makes "
+            "someone want to read on. Under about 12 words. No 'Did you know', no "
+            "'In today's world'.\n"
             "- Keep any example general (a lead, a teammate, a junior), not a made-up "
             "personal story about the author.\n"
             "- End with a warm, open question or a quiet takeaway.\n"
             + common_rules
         )
     else:
-        # injects hook_style from config.yaml if present, falls back to default rule
-        hook_rule = (
-            f"- Hook rule: {hook_style}\n"
-            if hook_style else
-            "- Open with a specific, concrete first line that stops the scroll. No "
-            "'In today's world', no 'Ever wondered', no 'Did you know', no throat-clearing.\n"
-        )
+        # use hook_style from config if set, otherwise the strong default
+        hook_rule = f"- Hook rule: {hook_style}\n" if hook_style else strong_hook
         p.append(
             "Hard rules (non-negotiable):\n"
             + hook_rule +
