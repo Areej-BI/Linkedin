@@ -53,6 +53,20 @@ hook_style: >
     and opened rarely. The gap is almost never the data."
   - A two-sentence open loop: state a problem, then subvert the obvious
     explanation so the reader has to keep reading to find out why.
+  - A specific scenario that reframes the whole topic in one line. Example:
+    "The blank canvas problem in Power BI is basically solved. The business
+    logic problem never was."
+  Before finalising the hook, apply this test: could this opening line
+  appear in any generic LinkedIn post about technology or data? If yes,
+  rewrite it. The hook must be specific enough that it could only come
+  from someone who has actually built Power BI reports for real clients.
+  A feature statement is never a hook. A limitation statement is never
+  a hook. The hook must create tension or an open loop that makes
+  stopping to read feel necessary.
+  Bad hook example: "Power BI Copilot can build a report layout in ten
+  seconds. It will also miss the business logic that actually drives the
+  decision." — this is a feature statement followed by a limitation.
+  Predictable pattern, easy to scroll past.
   Avoid these weak openers:
   - "In today's world..." or "In today's data-driven world..."
   - "I've been thinking about..."
