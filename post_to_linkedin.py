@@ -43,7 +43,6 @@ DRAFT_DIR = "draft"
 POST_FILE = os.path.join(DRAFT_DIR, "post.txt")
 IMAGE_FILE = os.path.join(DRAFT_DIR, "image.bin")
 META_FILE = os.path.join(DRAFT_DIR, "meta.json")
-LAST_TOPIC_FILE = "last_topic.txt"
 
 # Topics starting with this tag are leadership posts -> softer, polite tone.
 LEAD_TAG = "[lead]"
@@ -87,24 +86,32 @@ def load_topics(path="topics.txt"):
     return topics
 
 
-def get_last_topic():
+LAST_TOPIC_FILE = "last_topic.txt"
+
+
+def get_last_topics(n=3):
+    """Return the last N posted topics so we can avoid repeating them."""
     try:
         with open(LAST_TOPIC_FILE, "r", encoding="utf-8") as f:
-            return f.read().strip()
+            lines = [l.strip() for l in f.readlines() if l.strip()]
+            return lines[-n:]  # keep only the most recent n
     except FileNotFoundError:
-        return ""
+        return []
 
 
 def save_last_topic(topic):
+    """Append the chosen topic to the history file (keeps last 10 lines)."""
+    existing = get_last_topics(10)
+    existing.append(topic)
     with open(LAST_TOPIC_FILE, "w", encoding="utf-8") as f:
-        f.write(topic)
+        f.write("\n".join(existing[-10:]) + "\n")
 
 
 def pick_topic(topics):
-    """Pick a random topic, avoiding the one used last time."""
-    last = get_last_topic()
-    available = [t for t in topics if t != last]
-    if not available:
+    """Pick a random topic, avoiding the 3 most recently used ones."""
+    recent = set(get_last_topics(3))
+    available = [t for t in topics if t not in recent]
+    if not available:          # all topics recently used — reset and pick freely
         available = topics
     chosen = random.choice(available)
     save_last_topic(chosen)
