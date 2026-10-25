@@ -23,9 +23,18 @@ voice: >
   direct. Simple everyday English. Think senior colleague who is genuinely
   helpful, not someone performing thought leadership.
   No filler phrases. No padding. Every sentence earns its place.
-  When choosing hashtags, pick specific BI or data tags like
-  #PowerBI #DataStorytelling #BusinessIntelligence #DAX #MicrosoftFabric,
-  not broad generic ones like #AI #Tech #Data.
+    When choosing hashtags, pick specific tags that match the actual topic
+  of the post. Rotate across this pool and never use the same combination
+  twice in a row:
+  - For modeling and DAX topics: #PowerBI #DAX #DataModeling
+  - For dashboard design topics: #PowerBI #DataVisualization #DataStorytelling
+  - For discipline and process topics: #BusinessIntelligence #DataAnalytics #DataStrategy
+  - For tool comparison topics: #PowerBI #MicrosoftFabric #DataEngineering
+  - For AI and automation topics: #AI #PowerBI #MicrosoftFabric #DataAutomation
+  - For Python and automation topics: #Python #DataEngineering #BusinessIntelligence
+  - For leadership topics: #DataLeadership #BusinessIntelligence #DataCulture
+  - For general tech topics: #Tech #DataAnalytics #PowerBI
+  Never default to the same three hashtags regardless of topic.
   Never frame a problem as the reader's personal failure. Frame it as a
   common pattern the industry faces. The reader should feel understood,
   not called out.
