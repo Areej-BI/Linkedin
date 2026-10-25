@@ -8,7 +8,7 @@ Two modes:
 
 Topics come from topics.txt (one per line, editable on GitHub).
 Niche/voice/image settings come from config.yaml.
-Smart picking: avoids the last topic, varies post shape, asks the AI to
+Smart picking: avoids the last 3 topics, varies post shape, asks the AI to
 weave in something currently trending when relevant.
 """
 
@@ -29,7 +29,9 @@ LINKEDIN_PERSON_URN = os.environ.get("LINKEDIN_PERSON_URN", "")
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
 
 # ---- Endpoints (verified Oct 2026) ----
-GEMINI_TEXT_MODEL = "gemini-3.5-flash"
+# Text models are tried IN ORDER. If one is overloaded (503) or unavailable,
+# it automatically falls back to the next before giving up.
+GEMINI_TEXT_MODELS = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash"]
 GEMINI_IMAGE_MODEL = "gemini-3.1-flash-image"
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 LINKEDIN_POSTS_URL = "https://api.linkedin.com/rest/posts"
@@ -94,7 +96,7 @@ def get_last_topics(n=3):
     try:
         with open(LAST_TOPIC_FILE, "r", encoding="utf-8") as f:
             lines = [l.strip() for l in f.readlines() if l.strip()]
-            return lines[-n:]  # keep only the most recent n
+            return lines[-n:]
     except FileNotFoundError:
         return []
 
@@ -111,7 +113,7 @@ def pick_topic(topics):
     """Pick a random topic, avoiding the 3 most recently used ones."""
     recent = set(get_last_topics(3))
     available = [t for t in topics if t not in recent]
-    if not available:          # all topics recently used — reset and pick freely
+    if not available:
         available = topics
     chosen = random.choice(available)
     save_last_topic(chosen)
@@ -120,34 +122,54 @@ def pick_topic(topics):
 
 # ==================== AI text generation ====================
 
-def gemini_text(prompt, retries=3, backoff=15):
-    url = f"{GEMINI_BASE}/{GEMINI_TEXT_MODEL}:generateContent"
-    for attempt in range(1, retries + 1):
-        try:
-            resp = requests.post(
-                url,
-                headers={"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"},
-                json={"contents": [{"parts": [{"text": prompt}]}],
-                      "generationConfig": {"temperature": 1.05}},
-                timeout=60,
-            )
-            resp.raise_for_status()
-            return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
-        except requests.exceptions.HTTPError as e:
-            status = e.response.status_code if e.response is not None else None
-            if status in (429, 500, 502, 503, 504) and attempt < retries:
-                wait = backoff * attempt
-                print(f"Gemini error {status} on attempt {attempt}/{retries} — retrying in {wait}s", file=sys.stderr)
-                time.sleep(wait)
-            else:
-                raise
+def gemini_text(prompt, retries=4, backoff=15):
+    """Generate text. Retries transient errors, falls back across models,
+    and only gives up when every model has failed."""
+    payload = {"contents": [{"parts": [{"text": prompt}]}],
+               "generationConfig": {"temperature": 1.05}}
+    headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
+    retryable = (429, 500, 502, 503, 504)
+    last_err = None
+
+    for model in GEMINI_TEXT_MODELS:
+        url = f"{GEMINI_BASE}/{model}:generateContent"
+        for attempt in range(1, retries + 1):
+            try:
+                resp = requests.post(url, headers=headers, json=payload, timeout=60)
+                resp.raise_for_status()
+                return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+            except requests.exceptions.HTTPError as e:
+                status = e.response.status_code if e.response is not None else None
+                last_err = e
+                if status in (401, 403):
+                    raise  # bad API key — no other model will help
+                if status in retryable and attempt < retries:
+                    wait = backoff * attempt
+                    print(f"{model}: {status} (try {attempt}/{retries}) — retrying in {wait}s",
+                          file=sys.stderr)
+                    time.sleep(wait)
+                    continue
+                print(f"{model}: giving up ({status}) — trying next model", file=sys.stderr)
+                break  # move on to the next model
+            except requests.exceptions.RequestException as e:
+                last_err = e  # timeout / connection drop
+                if attempt < retries:
+                    wait = backoff * attempt
+                    print(f"{model}: network issue (try {attempt}/{retries}) — retrying in {wait}s",
+                          file=sys.stderr)
+                    time.sleep(wait)
+                    continue
+                print(f"{model}: network issues — trying next model", file=sys.stderr)
+                break
+
+    raise last_err if last_err else RuntimeError("Gemini text generation failed")
 
 
 def build_prompt(cfg, topic, leadership=False):
     shape = random.choice(LEAD_FORMATS if leadership else FORMATS)
     niche = (cfg.get("niche") or "").strip()
     voice = ((cfg.get("leadership_voice") if leadership else cfg.get("voice")) or "").strip()
-    hook_style = (cfg.get("hook_style") or "").strip()  # pulls hook_style from config.yaml
+    hook_style = (cfg.get("hook_style") or "").strip()  # optional override from config.yaml
     max_tags = int(cfg.get("max_hashtags", 2))
     length = cfg.get("target_length", "90 to 160 words")
     samples = [s.strip() for s in (cfg.get("style_samples") or []) if s and s.strip()]
@@ -206,7 +228,7 @@ def build_prompt(cfg, topic, leadership=False):
             + common_rules
         )
     else:
-        # injects hook_style from config.yaml if present, falls back to default rule
+        # uses hook_style from config.yaml if present, otherwise the default rule
         hook_rule = (
             f"- Hook rule: {hook_style}\n"
             if hook_style else
