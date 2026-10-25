@@ -3,13 +3,13 @@ name: LinkedIn Auto Post
 on:
   schedule:
     # ─────────────────────────────────────────────────────────────
-    #  Times are UTC. Pakistan (PKT) = UTC+5, subtract 5 hours.
+    #  Times are UTC. Pakistan (PKT) = UTC+5.
     #  day-of-week: 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
-    #  Default = Tuesday & Thursday at 10:00 AM PKT (05:00 UTC).
+    #  Posts on Wednesday & Friday at 3:30 PM PKT (10:30 UTC).
     # ─────────────────────────────────────────────────────────────
-    - cron: "30 10 * * 3"   # Wed ...
-    - cron: "30 10 * * 5"   # Fri ...
-    - cron: "30 18 * * 0"   # test — Sun 18:28 UTC = 23:28 PKT
+    - cron: "30 10 * * 3"   # Wed 10:30 UTC = 3:30 PM PKT
+    - cron: "30 10 * * 5"   # Fri 10:30 UTC = 3:30 PM PKT
+    - cron: "58 18 * * 0"   # TEST — Sun 18:58 UTC = 11:58 PM PKT — DELETE AFTER
   workflow_dispatch:       # run it by hand from the Actions tab
 
 # Give the workflow permission to write back to the repo
