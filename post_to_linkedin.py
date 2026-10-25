@@ -166,7 +166,7 @@ def gemini_text(prompt, retries=4, backoff=15):
 
 
 def build_prompt(cfg, topic, leadership=False):
-    shape = random.choice(LEAD_FORMATS if leadership else FORMATS)
+   shape = pick_format(LEAD_FORMATS if leadership else FORMATS, leadership)
     niche = (cfg.get("niche") or "").strip()
     voice = ((cfg.get("leadership_voice") if leadership else cfg.get("voice")) or "").strip()
     hook_style = (cfg.get("hook_style") or "").strip()  # optional override from config.yaml
@@ -396,7 +396,27 @@ def publish(text, author_urn, image_urn=None):
         print("LinkedIn error:", resp.status_code, resp.text, file=sys.stderr)
         resp.raise_for_status()
     print("Posted. ID:", resp.headers.get("x-restli-id", "(n/a)"))
+LAST_FORMAT_FILE = "last_format.txt"
 
+def get_last_format():
+    try:
+        with open(LAST_FORMAT_FILE, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return ""
+
+def save_last_format(fmt):
+    with open(LAST_FORMAT_FILE, "w", encoding="utf-8") as f:
+        f.write(fmt)
+
+def pick_format(formats, leadership=False):
+    last = get_last_format()
+    available = [f for f in formats if f != last]
+    if not available:
+        available = formats
+    chosen = random.choice(available)
+    save_last_format(chosen)
+    return chosen
 
 # ==================== modes ====================
 
