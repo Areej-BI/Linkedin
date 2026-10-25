@@ -166,7 +166,7 @@ def gemini_text(prompt, retries=4, backoff=15):
 
 
 def build_prompt(cfg, topic, leadership=False):
-   shape = pick_format(LEAD_FORMATS if leadership else FORMATS, leadership)
+    shape = pick_format(LEAD_FORMATS if leadership else FORMATS, leadership)
     niche = (cfg.get("niche") or "").strip()
     voice = ((cfg.get("leadership_voice") if leadership else cfg.get("voice")) or "").strip()
     hook_style = (cfg.get("hook_style") or "").strip()  # optional override from config.yaml
