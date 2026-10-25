@@ -434,20 +434,23 @@ def publish(text, author_urn, image_urn=None):
 
 LAST_FORMAT_FILE = "last_format.txt"
 
-def get_last_format():
+def get_last_formats(n=3):
     try:
         with open(LAST_FORMAT_FILE, "r", encoding="utf-8") as f:
-            return f.read().strip()
+            lines = [l.strip() for l in f.readlines() if l.strip()]
+            return lines[-n:]
     except FileNotFoundError:
-        return ""
+        return []
 
 def save_last_format(fmt):
+    existing = get_last_formats(10)
+    existing.append(fmt)
     with open(LAST_FORMAT_FILE, "w", encoding="utf-8") as f:
-        f.write(fmt)
+        f.write("\n".join(existing[-10:]) + "\n")
 
 def pick_format(formats, leadership=False):
-    last = get_last_format()
-    available = [f for f in formats if f != last]
+    recent = set(get_last_formats(3))
+    available = [f for f in formats if f not in recent]
     if not available:
         available = formats
     chosen = random.choice(available)
