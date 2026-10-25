@@ -9,7 +9,7 @@ on:
     # ─────────────────────────────────────────────────────────────
     - cron: "30 10 * * 3"   # Wed 10:30 UTC = 3:30 PM PKT
     - cron: "30 10 * * 5"   # Fri 10:30 UTC = 3:30 PM PKT
-    - cron: "58 18 * * 0"   # TEST — Sun 18:58 UTC = 11:58 PM PKT — DELETE AFTER
+    - cron: "45 19 * * 1"   # TEST — Sun 18:58 UTC = 11:58 PM PKT — DELETE AFTER
   workflow_dispatch:       # run it by hand from the Actions tab
 
 # Give the workflow permission to write back to the repo
