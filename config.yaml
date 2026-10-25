@@ -131,6 +131,24 @@ style_samples:
     Which type are you building most often right now?
 
     #PowerBI #DataVisualization #BusinessIntelligence
+  - |
+    Visual calculations handle layout logic inside the visual without
+    touching the semantic model.
+
+    Here is where they help:
+    fast layout logic, client specific grouping, and matrix level totals
+    that used to require heavy DAX.
+
+    Here is where they do not:
+    reusing business logic across multiple reports or filtering down at
+    the model level.
+
+    Visual calculations are great for presentation logic. They are not a
+    replacement for a clean data model.
+
+    Which calculations are you keeping in the semantic model right now?
+
+    #PowerBI #DAX #BusinessIntelligence 
 
 # ---- POST RULES -------------------------------------------
 max_hashtags: 3
