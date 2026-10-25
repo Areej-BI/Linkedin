@@ -1,10 +1,1 @@
 Power BI Copilot is genuinely useful for a first pass. Where it helps most, and where a person still adds the real value
-[lead] How a lead responds to a junior's mistake often teaches more than the fix itself
-Clear names for measures and columns are a small habit that quietly makes a whole model easier for everyone to use
-[lead] Good leadership often looks like quietly removing obstacles, not taking the credit
-Turning a single number into a decision is a craft. AI can draw the chart, but the framing is still a human strength
-Fabric turned Power BI into part of a bigger data platform. What that opens up for data people
-Self service analytics works only when the model underneath is built for humans, not just for DAX
-Good data work is less about tools and more about asking the right question before building anything
-Report runs slow? The first few things worth checking before rewriting any DAX
-Dashboard colors and formatting are not decoration. They are how a reader finds the signal fast
