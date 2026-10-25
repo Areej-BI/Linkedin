@@ -2,36 +2,49 @@
 #  YOUR TOPIC POOL  (edit on GitHub: click file, pencil, commit)
 #  - One topic angle per line. The AI writes a full post around it.
 #  - Lines starting with #  are notes and are ignored.
-#  - Lines starting with [lead]  are leadership posts and get a softer,
-#    warmer, observational tone automatically.
-#  - "Sometimes" leadership = just the ratio of [lead] lines to the rest.
-#  Note: posts are written as general observations and insight, never as
-#  fabricated personal stories, and the tone stays positive and hopeful.
+#  - Lines starting with [lead]  are leadership posts (softer tone).
+#  - Posts are written as general observation and insight, never as
+#    fabricated personal stories. Tone stays positive and hopeful.
 # ============================================================
 
-As AI takes over routine report building, the most valuable BI skill is becoming judgment: knowing which number actually matters
-AI can write DAX in seconds now, and that is good news. It frees a BI developer to focus on the data model and the story behind the numbers
-Companies that pair a skilled BI developer with AI tools get the best of both worlds: speed from the tool and trust in the numbers from the person
-The semantic model is quietly becoming the most valuable thing a BI developer builds. A strong one makes everything downstream easier
-A simple way to make sure a dashboard actually gets used instead of just built
-Data storytelling is the one part of analytics AI cannot fake yet, and it is becoming the skill that sets people apart
-The most useful thing to learn in data this year is not another tool. It is how to turn a messy business question into a clear one
-Fabric turned Power BI into part of a larger data platform, which opens real new ground for BI people willing to grow with it
-AI tools are great at a first draft of a report. A BI developer is what turns that draft into something a business can trust
-Treating AI like a fast, eager junior that still needs checking is the mindset working best in data right now
+# ---------- Power BI craft (DAX, modeling, performance) ----------
 A clean star schema is a little boring to build and wonderful to use. Why the model under the report deserves more love
-One thoughtful question asked before building a report can save a team weeks. The kind of question that works
-The data people thriving alongside AI tend to share one habit: they check the output instead of trusting it blindly
-A good dashboard answers the question before the viewer has to ask it. A simple way to design for that
-Turning a single number into a decision is a craft. AI can draw the chart, but the framing is still a human strength
-Power BI Copilot is genuinely useful for a first pass. Where it helps most, and where a person still adds the real value
-Less is usually more in a report. Removing a few visuals often makes the remaining ones land harder
-The future of BI looks less like clicking through menus and more like shaping data and guiding decisions, and that is an exciting shift
-Learning a little Python alongside Power BI opens up automation that saves hours of repetitive prep
-Clear names for measures and columns are a small habit that quietly makes a whole model easier for everyone to use
+A simple CALCULATE plus filter context idea that trips up even experienced developers, explained plainly
+Why a separate date table beats trusting the auto-generated one, and what it unlocks
+DirectQuery vs Import: when each one actually makes sense, beyond the usual advice
+The most underrated Power Query step that quietly cleans messy source data
+Report runs slow? The first few things worth checking before rewriting any DAX
+Clear names for measures and columns are a small habit that makes a whole model easier to trust
+Visual calculations can replace some heavy DAX. Where they help and where they do not
+Why fewer visuals on a page often makes the remaining ones land harder
 
-[lead] The leaders who get the most from a team often lead quietly rather than loudly. A small thing worth noticing
+# ---------- Dashboard design and data storytelling ----------
+A single big number on a dashboard means little without a target and some context next to it
+A good dashboard answers the question before the viewer has to ask it. A simple way to design for that
+Turning a raw metric into a decision is a craft, not a chart choice
+The difference between a dashboard that looks impressive and one that actually gets used
+Stakeholders rarely want a 14 tab report. They want one number and the story behind it
+Dashboard colors and formatting are not decoration. They are how a reader finds the signal fast
+
+# ---------- Data and BI as a discipline ----------
+Most data problems are not technical. They start with a fuzzy business question nobody sharpened first
+The least glamorous data work, clean definitions and documentation, is often what makes a team fast
+A metric means nothing until everyone agrees how it is calculated. Why a shared definition matters
+Good data work is less about tools and more about asking the right question before building anything
+The quiet skill that sets data people apart is turning a messy request into a clear one
+Data quality is boring until one wrong number in a board deck costs someone their trust
+Self service analytics works only when the model underneath is built for humans, not just for DAX
+
+# ---------- Tool comparisons and perspective ----------
+Power BI vs Looker Studio: the real differences that matter, and it is not about which is better
+Excel never died in analytics. Where it still wins and where a real BI tool should take over
+Fabric turned Power BI into part of a bigger data platform. What that opens up for data people
+
+# ---------- Light AI / automation crossover (kept small on purpose) ----------
+AI can write DAX in seconds now. That frees a developer to focus on the model and the story
+Learning a little Python alongside BI opens up automation that saves hours of repetitive prep
+Treating AI like a fast junior that still needs checking is the mindset working best in data right now
+
+# ---------- Leadership (kept to a couple on purpose) ----------
+[lead] Some of the best leadership is quiet: clearing obstacles so the team can do its best work
 [lead] On strong teams, the smartest person in the room is rarely the loudest one
-[lead] How a lead responds to a junior's mistake often teaches more than the fix itself
-[lead] Good leadership often looks like quietly removing obstacles, not taking the credit
-[lead] Feedback given with kindness tends to land better and last longer. A gentle art worth practicing
