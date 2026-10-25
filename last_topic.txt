@@ -1,4 +1,3 @@
-Treating AI like a fast, eager junior that still needs checking is the mindset working best in data right now
 Less is usually more in a report. Removing a few visuals often makes the remaining ones land harder
 Power BI Copilot is genuinely useful for a first pass. Where it helps most, and where a person still adds the real value
 [lead] How a lead responds to a junior's mistake often teaches more than the fix itself
@@ -8,3 +7,4 @@ Turning a single number into a decision is a craft. AI can draw the chart, but t
 Fabric turned Power BI into part of a bigger data platform. What that opens up for data people
 Self service analytics works only when the model underneath is built for humans, not just for DAX
 Good data work is less about tools and more about asking the right question before building anything
+Report runs slow? The first few things worth checking before rewriting any DAX
