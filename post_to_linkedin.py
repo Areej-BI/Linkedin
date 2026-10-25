@@ -107,18 +107,50 @@ def save_last_topic(topic):
     existing.append(topic)
     with open(LAST_TOPIC_FILE, "w", encoding="utf-8") as f:
         f.write("\n".join(existing[-10:]) + "\n")
+LAST_SECTION_FILE = "last_section.txt"
 
+def get_last_section():
+    try:
+        with open(LAST_SECTION_FILE, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return ""
+
+def save_last_section(section):
+    with open(LAST_SECTION_FILE, "w", encoding="utf-8") as f:
+        f.write(section)
+
+def get_section(topic):
+    """Extract [tag] from a topic line, or return 'general'."""
+    if topic.startswith("["):
+        end = topic.find("]")
+        if end != -1:
+            return topic[1:end].lower()
+    return "general"
 
 def pick_topic(topics):
-    """Pick a random topic, avoiding the 3 most recently used ones."""
-    recent = set(get_last_topics(3))
-    available = [t for t in topics if t not in recent]
+    """Pick a random topic, avoiding the last 3 topics AND the last used section."""
+    recent_topics = set(get_last_topics(3))
+    last_section = get_last_section()
+
+    # First preference: different section AND not recently used
+    available = [
+        t for t in topics
+        if t not in recent_topics and get_section(t) != last_section
+    ]
+
+    # Fallback: if all different-section topics are exhausted, just avoid recent topics
+    if not available:
+        available = [t for t in topics if t not in recent_topics]
+
+    # Last resort
     if not available:
         available = topics
+
     chosen = random.choice(available)
     save_last_topic(chosen)
+    save_last_section(get_section(chosen))
     return chosen
-
 
 # ==================== AI text generation ====================
 
