@@ -137,7 +137,8 @@ def build_prompt(cfg, topic, leadership=False):
     shape = random.choice(LEAD_FORMATS if leadership else FORMATS)
     niche = (cfg.get("niche") or "").strip()
     voice = ((cfg.get("leadership_voice") if leadership else cfg.get("voice")) or "").strip()
-    max_tags = int(cfg.get("max_hashtags", 2))
+    hook_style = (cfg.get("hook_style") or "").strip()  # NEW: pulls hook_style from config.yaml
+    max_tags = int(cfg.get("max_hashtags", 3))
     length = cfg.get("target_length", "90 to 160 words")
     samples = [s.strip() for s in (cfg.get("style_samples") or []) if s and s.strip()]
 
@@ -195,10 +196,16 @@ def build_prompt(cfg, topic, leadership=False):
             + common_rules
         )
     else:
-        p.append(
-            "Hard rules (non-negotiable):\n"
+        # NEW: injects hook_style from config.yaml if present, falls back to default rule
+        hook_rule = (
+            f"- Hook rule: {hook_style}\n"
+            if hook_style else
             "- Open with a specific, concrete first line that stops the scroll. No "
             "'In today's world', no 'Ever wondered', no 'Did you know', no throat-clearing.\n"
+        )
+        p.append(
+            "Hard rules (non-negotiable):\n"
+            + hook_rule +
             "- Include one concrete, specific detail or example, framed generally "
             "(a company, a team, a BI developer), not as a personal anecdote.\n"
             "- End with a light question or small takeaway. No hard sales CTA.\n"
