@@ -31,7 +31,7 @@ PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
 # ---- Endpoints (verified Oct 2026) ----
 # Text models are tried IN ORDER. If one is overloaded (503) or unavailable,
 # it automatically falls back to the next before giving up.
-GEMINI_TEXT_MODELS = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash"]
+GEMINI_TEXT_MODELS = ["gemini-flash-latest", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
 GEMINI_IMAGE_MODEL = "gemini-3.1-flash-image"
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 LINKEDIN_POSTS_URL = "https://api.linkedin.com/rest/posts"
