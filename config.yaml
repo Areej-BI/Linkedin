@@ -7,50 +7,51 @@
 # ---- YOUR NICHE -------------------------------------------
 niche: >
   Senior Power BI developer, Microsoft certified in BI. Hands-on
-  experience with real client projects. Also work with other BI tools,
-  know basic Python, ML, and automation, and strong at data storytelling.
+  experience with real client projects across debt recovery, campaign
+  reporting, and client-facing dashboards. Also work with Fabric,
+  Power Query, DAX, basic Python, and automation. Strong at data
+  storytelling and translating messy business questions into clean
+  models and reports.
   I write for BI developers, data analysts, and business stakeholders
-  who use or care about dashboards and data-driven decisions.
+  who build or use dashboards and care about decisions, not just data.
 
 # ---- YOUR VOICE -------------------------------------------
 voice: >
   Short, punchy, slightly opinionated but never arrogant. I sound like a
   developer who has built real things for real clients and has opinions
   because of that experience, not because I read a blog. Friendly and
-  direct. When I talk about leadership or management, I keep it soft,
-  smart, and polite. No chest-thumping. No motivational-speaker energy.
-  I earn credibility through specific examples, not big claims.
-  Simple everyday English. Think senior colleague who is genuinely
+  direct. Simple everyday English. Think senior colleague who is genuinely
   helpful, not someone performing thought leadership.
-  No filler phrases. No padding where it adds nothing. Every sentence
-  earns its place. But where a short transition or cushion helps the
-  reader follow the thought, use it — just keep it tight.
+  No filler phrases. No padding. Every sentence earns its place.
   When choosing hashtags, pick specific BI or data tags like
-  #PowerBI #DataStorytelling #BusinessIntelligence, not broad generic
-  ones like #AI #Tech #Data.
-  Never frame a problem as the reader's personal failure. If something
-  is going wrong, frame it as a common pattern the industry faces,
-  not something the individual did wrong. The reader should feel
-  understood, not called out.
-  Never demean or talk down to any role or experience level. If using
-  a workplace analogy, keep it about process and context, never about
-  someone's capability or confidence.
+  #PowerBI #DataStorytelling #BusinessIntelligence #DAX #MicrosoftFabric,
+  not broad generic ones like #AI #Tech #Data.
+  Never frame a problem as the reader's personal failure. Frame it as a
+  common pattern the industry faces. The reader should feel understood,
+  not called out.
+  Never demean or talk down to any role or experience level.
+  Vary the type of post across runs. Some posts should be technical and
+  specific (DAX, Power Query, modeling). Some should be about design and
+  storytelling. Some about the discipline of data work. Do not default
+  to the same angle every time.
 
 # ---- HOOK RULES (applied to every post's opening line) ----
 hook_style: >
   Lead with tension, a specific mistake, a blunt truth, or a
-  counterintuitive contrast. Make it feel like something real happened
-  or something important is at stake. Cut any opener that sounds like
-  a blog intro. The first line is the whole reason someone keeps reading.
+  counterintuitive contrast. The first line must make stopping to read
+  feel necessary. Cut any opener that sounds like a blog intro.
   Strong patterns to rotate through:
   - A process detail that ends in a quiet failure. Example: "The dashboard
     passed UAT, got signed off, and quietly stopped being opened. Nobody said why."
   - A blunt fact that flips conventional wisdom. Example: "A well-built
     dashboard that nobody opens is still a failed dashboard."
+  - A specific scenario with an unexpected outcome. Example: "The matrix
+    looked right. The totals were wrong. Three hours later the problem
+    was a running total calculated at the wrong level in the model."
   - A sharp contrast between what people do and what actually works.
-  - A common industry pattern named directly, framed as shared experience
-    not personal failure. Example: "Most dashboards get built carefully
-    and opened rarely. The gap is almost never the data."
+  - A common industry pattern named directly, framed as shared experience.
+    Example: "Most dashboards get built carefully and opened rarely.
+    The gap is almost never the data."
   - A two-sentence open loop: state a problem, then subvert the obvious
     explanation so the reader has to keep reading to find out why.
   - A specific scenario that reframes the whole topic in one line. Example:
@@ -61,20 +62,15 @@ hook_style: >
   rewrite it. The hook must be specific enough that it could only come
   from someone who has actually built Power BI reports for real clients.
   A feature statement is never a hook. A limitation statement is never
-  a hook. The hook must create tension or an open loop that makes
-  stopping to read feel necessary.
-  Bad hook example: "Power BI Copilot can build a report layout in ten
-  seconds. It will also miss the business logic that actually drives the
-  decision." — this is a feature statement followed by a limitation.
-  Predictable pattern, easy to scroll past.
+  a hook. The hook must create tension or an open loop.
   Avoid these weak openers:
   - "In today's world..." or "In today's data-driven world..."
   - "I've been thinking about..."
   - "Here's something interesting..."
   - "As a BI developer, I often..."
-  - "Did you know..."
-  - "Ever wondered..."
+  - "Did you know..." / "Ever wondered..."
   - Any opener that could belong to any post by anyone in any field.
+  - A feature statement followed immediately by a limitation.
   The hook should be one or two sentences max. No emoji in the hook.
 
 # ---- LEADERSHIP VOICE (used only for [lead] topics) -------
@@ -122,33 +118,48 @@ style_samples:
     Most abandoned dashboards were built in operational mode for an audience
     that needed executive mode.
 
-    Power BI's Card visual helps close that gap — reference context tucked
-    into one element instead of three extra charts on the canvas.
-
     Removing visuals rarely hides information. It gives the remaining data
     room to actually drive a decision.
 
     Which type are you building most often right now?
 
     #PowerBI #DataVisualization #BusinessIntelligence
+
   - |
-    Visual calculations handle layout logic inside the visual without
-    touching the semantic model.
+    The matrix looked right. The totals were wrong. Three hours later the
+    problem was a running total calculated at the wrong level in the model.
 
-    Here is where they help:
-    fast layout logic, client specific grouping, and matrix level totals
-    that used to require heavy DAX.
+    Visual calculations solve exactly this. Layout logic stays inside the
+    visual, the semantic model stays clean.
 
-    Here is where they do not:
-    reusing business logic across multiple reports or filtering down at
-    the model level.
+    Where they help: fast layout logic, client specific grouping, matrix
+    level totals that used to need heavy DAX.
 
-    Visual calculations are great for presentation logic. They are not a
-    replacement for a clean data model.
+    Where they do not: reusing business logic across reports, or filtering
+    at the model level.
+
+    Great for presentation. Not a replacement for a clean data model.
 
     Which calculations are you keeping in the semantic model right now?
 
-    #PowerBI #DAX #BusinessIntelligence 
+    #PowerBI #DAX #BusinessIntelligence
+
+  - |
+    A slow Power BI report almost never needs a DAX rewrite first.
+
+    Before touching any measure, check three things: is the table in
+    DirectQuery when Import would work? Are there too many visuals firing
+    queries at the same time? Is the date table marked correctly?
+
+    Most performance problems sit in the model or the page layout,
+    not the calculation logic. Rewriting DAX on top of a slow model
+    just moves the problem around.
+
+    Fix the foundation first. The measures usually sort themselves out.
+
+    What is the first thing you check when a report starts running slow?
+
+    #PowerBI #DAX #DataModeling
 
 # ---- POST RULES -------------------------------------------
 max_hashtags: 3
