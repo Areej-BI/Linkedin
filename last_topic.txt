@@ -7,3 +7,4 @@ Data storytelling is the one part of analytics AI cannot fake yet, and it is bec
 Clear names for measures and columns are a small habit that quietly makes a whole model easier for everyone to use
 The future of BI looks less like clicking through menus and more like shaping data and guiding decisions, and that is an exciting shift
 Treating AI like a fast, eager junior that still needs checking is the mindset working best in data right now
+Less is usually more in a report. Removing a few visuals often makes the remaining ones land harder
