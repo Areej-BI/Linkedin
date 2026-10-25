@@ -29,7 +29,9 @@ LINKEDIN_PERSON_URN = os.environ.get("LINKEDIN_PERSON_URN", "")
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
 
 # ---- Endpoints (verified Oct 2026) ----
-GEMINI_TEXT_MODEL = "gemini-3.5-flash"
+# Text models tried in order. If the first is overloaded (503), it falls back
+# to the next one before giving up.
+GEMINI_TEXT_MODELS = ["gemini-3.5-flash", "gemini-2.5-flash"]
 GEMINI_IMAGE_MODEL = "gemini-3.1-flash-image"
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 LINKEDIN_POSTS_URL = "https://api.linkedin.com/rest/posts"
@@ -127,27 +129,47 @@ def pick_topic(topics):
 
 # ==================== AI text generation ====================
 
-def gemini_text(prompt, retries=3, backoff=15):
-    url = f"{GEMINI_BASE}/{GEMINI_TEXT_MODEL}:generateContent"
-    for attempt in range(1, retries + 1):
-        try:
-            resp = requests.post(
-                url,
-                headers={"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"},
-                json={"contents": [{"parts": [{"text": prompt}]}],
-                      "generationConfig": {"temperature": 1.05}},
-                timeout=60,
-            )
-            resp.raise_for_status()
-            return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
-        except requests.exceptions.HTTPError as e:
-            status = e.response.status_code if e.response is not None else None
-            if status in (429, 500, 502, 503, 504) and attempt < retries:
-                wait = backoff * attempt
-                print(f"Gemini error {status} on attempt {attempt}/{retries} — retrying in {wait}s", file=sys.stderr)
-                time.sleep(wait)
-            else:
-                raise
+def gemini_text(prompt, retries=4, backoff=15):
+    """Generate text, retrying transient errors and falling back across models."""
+    payload = {"contents": [{"parts": [{"text": prompt}]}],
+               "generationConfig": {"temperature": 1.05}}
+    headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
+    retryable = (429, 500, 502, 503, 504)
+    last_err = None
+
+    for model in GEMINI_TEXT_MODELS:
+        url = f"{GEMINI_BASE}/{model}:generateContent"
+        for attempt in range(1, retries + 1):
+            try:
+                resp = requests.post(url, headers=headers, json=payload, timeout=60)
+                resp.raise_for_status()
+                return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+            except requests.exceptions.HTTPError as e:
+                status = e.response.status_code if e.response is not None else None
+                last_err = e
+                if status not in retryable:
+                    raise  # e.g. 400/401/403 — a real problem, don't waste time
+                if attempt < retries:
+                    wait = backoff * attempt
+                    print(f"{model}: {status} (try {attempt}/{retries}) — retrying in {wait}s",
+                          file=sys.stderr)
+                    time.sleep(wait)
+                else:
+                    print(f"{model}: {status} after {retries} tries — trying next model",
+                          file=sys.stderr)
+            except requests.exceptions.RequestException as e:
+                last_err = e  # timeout / connection drop
+                if attempt < retries:
+                    wait = backoff * attempt
+                    print(f"{model}: network issue (try {attempt}/{retries}) — retrying in {wait}s",
+                          file=sys.stderr)
+                    time.sleep(wait)
+                else:
+                    print(f"{model}: network issues after {retries} tries — trying next model",
+                          file=sys.stderr)
+
+    # Every model and retry failed
+    raise last_err if last_err else RuntimeError("Gemini text generation failed")
 
 
 def build_prompt(cfg, topic, leadership=False):
