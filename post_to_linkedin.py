@@ -395,7 +395,7 @@ def publish(text, author_urn, image_urn=None):
     if resp.status_code not in (200, 201):
         print("LinkedIn error:", resp.status_code, resp.text, file=sys.stderr)
         resp.raise_for_status()
-        print("Posted. ID:", resp.headers.get("x-restli-id", "(n/a)"))
+    print("Posted. ID:", resp.headers.get("x-restli-id", "(n/a)"))
 
 
 # ==================== format tracking ====================
