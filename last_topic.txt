@@ -1,4 +1,3 @@
-Clear names for measures and columns are a small habit that quietly makes a whole model easier for everyone to use
 The future of BI looks less like clicking through menus and more like shaping data and guiding decisions, and that is an exciting shift
 Treating AI like a fast, eager junior that still needs checking is the mindset working best in data right now
 Less is usually more in a report. Removing a few visuals often makes the remaining ones land harder
@@ -8,3 +7,4 @@ Clear names for measures and columns are a small habit that quietly makes a whol
 [lead] Good leadership often looks like quietly removing obstacles, not taking the credit
 Turning a single number into a decision is a craft. AI can draw the chart, but the framing is still a human strength
 Fabric turned Power BI into part of a bigger data platform. What that opens up for data people
+Self service analytics works only when the model underneath is built for humans, not just for DAX
