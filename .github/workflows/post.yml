@@ -9,6 +9,7 @@ on:
     # ─────────────────────────────────────────────────────────────
     - cron: "30 10 * * 3"   # Wed ...
     - cron: "30 10 * * 5"   # Fri ...
+    - cron: "30 18 * * 0"   # test — Sun 18:28 UTC = 23:28 PKT
   workflow_dispatch:       # run it by hand from the Actions tab
 
 # Give the workflow permission to write back to the repo
