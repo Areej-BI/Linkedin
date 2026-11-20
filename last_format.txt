@@ -1,4 +1,3 @@
-a short, confident explanation of why one habit or idea quietly matters more than people think
 a simple comparison of two approaches and when each one helps, no drama
 a clear, specific insight explained simply, with a general example (a company, a team, a BI developer)
 a hopeful take on how a shift in the field is creating opportunity, grounded in specifics
@@ -8,3 +7,4 @@ a myth-busting post: name a common belief, then calmly explain why the reality i
 a simple comparison of two approaches and when each one helps, no drama
 a practical, useful tip the reader can apply, explained through a general example not a personal anecdote
 an observation about where the real value in data work is moving, stated with optimism
+a clear, specific insight explained simply, with a general example (a company, a team, a BI developer)
