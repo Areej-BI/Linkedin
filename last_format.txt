@@ -1,4 +1,3 @@
-a hopeful take on how a shift in the field is creating opportunity, grounded in specifics
 a practical, useful tip the reader can apply, explained through a general example not a personal anecdote
 a gentle observation about what effective, kind leadership tends to look like
 a myth-busting post: name a common belief, then calmly explain why the reality is more encouraging
@@ -8,3 +7,4 @@ an observation about where the real value in data work is moving, stated with op
 a clear, specific insight explained simply, with a general example (a company, a team, a BI developer)
 a myth-busting post: name a common belief, then calmly explain why the reality is more encouraging
 a short, confident explanation of why one habit or idea quietly matters more than people think
+a gentle observation about what effective, kind leadership tends to look like
