@@ -16,6 +16,7 @@ import base64
 import json
 import os
 import random
+import re
 import sys
 import time
 
@@ -28,7 +29,7 @@ LINKEDIN_ACCESS_TOKEN = os.environ.get("LINKEDIN_ACCESS_TOKEN", "")
 LINKEDIN_PERSON_URN = os.environ.get("LINKEDIN_PERSON_URN", "")
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
 
-# ---- Endpoints (verified Oct 2026) ----
+# ---- Endpoints ----
 # Text models are tried IN ORDER. If one is overloaded (503) or unavailable,
 # it automatically falls back to the next before giving up.
 GEMINI_TEXT_MODELS = ["gemini-flash-latest", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
@@ -107,7 +108,10 @@ def save_last_topic(topic):
     existing.append(topic)
     with open(LAST_TOPIC_FILE, "w", encoding="utf-8") as f:
         f.write("\n".join(existing[-10:]) + "\n")
+
+
 LAST_SECTION_FILE = "last_section.txt"
+
 
 def get_last_section():
     try:
@@ -116,9 +120,11 @@ def get_last_section():
     except FileNotFoundError:
         return ""
 
+
 def save_last_section(section):
     with open(LAST_SECTION_FILE, "w", encoding="utf-8") as f:
         f.write(section)
+
 
 def get_section(topic):
     """Extract [tag] from a topic line, or return 'general'."""
@@ -127,6 +133,7 @@ def get_section(topic):
         if end != -1:
             return topic[1:end].lower()
     return "general"
+
 
 def pick_topic(topics):
     """Pick a random topic, avoiding the last 3 topics AND the last used section."""
@@ -151,6 +158,7 @@ def pick_topic(topics):
     save_last_topic(chosen)
     save_last_section(get_section(chosen))
     return chosen
+
 
 # ==================== AI text generation ====================
 
@@ -298,10 +306,47 @@ def build_prompt(cfg, topic, leadership=False):
 
 
 def parse_json_loose(text):
-    start, end = text.find("{"), text.rfind("}")
+    """
+    Robustly extract {"post": ..., "image_query": ...} from a model reply,
+    even when it's wrapped in ```json fences, prose, or thinking text.
+    Tries several strategies before giving up.
+    """
+    t = text.strip()
+
+    # 1) Strip markdown code fences if present
+    t = re.sub(r"```json", "", t, flags=re.IGNORECASE)
+    t = t.replace("```", "").strip()
+
+    # 2) Try direct parse first
+    try:
+        return json.loads(t)
+    except Exception:
+        pass
+
+    # 3) Try the largest {...} block
+    start, end = t.find("{"), t.rfind("}")
     if start != -1 and end != -1 and end > start:
-        text = text[start:end + 1]
-    return json.loads(text)
+        candidate = t[start:end + 1]
+        try:
+            return json.loads(candidate)
+        except Exception:
+            repaired = re.sub(r",\s*([}\]])", r"\1", candidate)  # drop trailing commas
+            try:
+                return json.loads(repaired)
+            except Exception:
+                pass
+
+    # 4) Last resort: pull the "post" value out with a regex
+    m = re.search(r'"post"\s*:\s*"((?:[^"\\]|\\.)*)"', t, re.DOTALL)
+    if m:
+        post = m.group(1).encode().decode("unicode_escape")
+        iq = ""
+        mi = re.search(r'"image_query"\s*:\s*"((?:[^"\\]|\\.)*)"', t)
+        if mi:
+            iq = mi.group(1)
+        return {"post": post, "image_query": iq}
+
+    raise ValueError("Could not parse JSON from model response")
 
 
 # ==================== images ====================
@@ -434,6 +479,7 @@ def publish(text, author_urn, image_urn=None):
 
 LAST_FORMAT_FILE = "last_format.txt"
 
+
 def get_last_formats(n=3):
     try:
         with open(LAST_FORMAT_FILE, "r", encoding="utf-8") as f:
@@ -442,11 +488,13 @@ def get_last_formats(n=3):
     except FileNotFoundError:
         return []
 
+
 def save_last_format(fmt):
     existing = get_last_formats(10)
     existing.append(fmt)
     with open(LAST_FORMAT_FILE, "w", encoding="utf-8") as f:
         f.write("\n".join(existing[-10:]) + "\n")
+
 
 def pick_format(formats, leadership=False):
     recent = set(get_last_formats(3))
@@ -456,7 +504,6 @@ def pick_format(formats, leadership=False):
     chosen = random.choice(available)
     save_last_format(chosen)
     return chosen
-
 
 
 # ==================== modes ====================
@@ -471,14 +518,25 @@ def do_generate():
     leadership = topic.lower().startswith(LEAD_TAG)
     clean_topic = topic[len(LEAD_TAG):].strip() if leadership else topic
     raw = gemini_text(build_prompt(cfg, clean_topic, leadership=leadership))
+
     try:
         data = parse_json_loose(raw)
         post = str(data["post"]).strip()
         image_query = str(data.get("image_query", "")).strip()
-    except Exception:
-        post, image_query = raw.strip(), ""
+    except Exception as e:
+        # Do NOT fall back to the raw JSON blob — that is what leaked {"post": ...} to the feed.
+        print("JSON parse failed:", e, file=sys.stderr)
+        print("Raw response was:", raw[:500], file=sys.stderr)
+        sys.exit("Could not parse a clean post from the AI response. Failing instead of posting garbage.")
+
+    # Strip a single pair of wrapping quotes if the model added them
     if len(post) >= 2 and post[0] in "\"'" and post[-1] in "\"'":
         post = post[1:-1].strip()
+
+    # Safety net: if the post still looks like raw JSON, refuse to continue
+    if post.startswith("{") and '"post"' in post:
+        print("Post still looks like raw JSON after parsing:", post[:200], file=sys.stderr)
+        sys.exit("Parsed post looks like JSON — refusing to post. Re-run the generate step.")
 
     image_bytes = get_image(cfg, image_query)
 
@@ -487,7 +545,7 @@ def do_generate():
         f.write(post)
     with open(META_FILE, "w", encoding="utf-8") as f:
         json.dump({"has_image": bool(image_bytes), "image_query": image_query,
-                    "topic": clean_topic, "leadership": leadership}, f)
+                   "topic": clean_topic, "leadership": leadership}, f)
     if image_bytes:
         with open(IMAGE_FILE, "wb") as f:
             f.write(image_bytes)
